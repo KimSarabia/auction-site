@@ -1,12 +1,13 @@
 var express = require('express');
 var router = express.Router();
 
+var Auction = require('../models/auction');
 var User = require('../models/user');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   User.find({})
-  .populate('messages')
+  .populate('auctions')
   .exec(function(err, users){
     console.log("users", users);
     res.status(err ? 400 : 200).send(err || users);

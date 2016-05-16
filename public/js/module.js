@@ -3,7 +3,8 @@
 var app = angular.module('myApp', ['ui.router', 'ngCookies']);
 
 app.config(function($stateProvider, $urlRouterProvider){
-  $stateProvider.state('register', {
+  $stateProvider
+  .state('register', {
     url: '/register',
     templateUrl: '/html/register.html',
     controller: 'registerCtrl'

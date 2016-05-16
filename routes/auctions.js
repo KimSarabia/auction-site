@@ -46,12 +46,12 @@ router.delete('/:id', User.isLoggedIn, (req, res) => {
 });
 
 //6
-router.post('/:id/newBid', User.isLoggedIn, (req, res) => {
+router.post('/:id/addBid', User.isLoggedIn, (req, res) => {
   Auction.findById(req.params.id, (err, auction) => {
     if(auction.bids[0].itemBidder.toString() === req.user._id.toString()) return res.status(400).send('Bidding on your own item is prohibited.');
     if(err) return res.status(400).send(err);
-    auction.newBid(req.user._id, req.body.bidValue, (err) => {
-      res.status(err ? 400 : 200).send(err || `New bid.`);
+    auction.addBid(req.user._id, req.body.bidValue, (err) => {
+      res.status(err ? 400 : 200).send(err || `You just placed bid on ${req.params.id}.`);
     })
   })
 });

@@ -7,7 +7,6 @@ var jwt = require('jsonwebtoken');
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-
 var Auction;
 
 var User = require('../models/user');
@@ -43,11 +42,11 @@ var auctionSchema = new mongoose.Schema({
         },
         bidValue: {
             type: Number,
-            // required: true
+            required: true
         },
         bidDate: {
             type: String,
-            // required: true
+            required: true
         }
     }]
 
@@ -55,7 +54,7 @@ var auctionSchema = new mongoose.Schema({
 
 auctionSchema.statics.addNewItem = (auctionObj, userId, cb) => {
     if (!auctionObj) res.send('Not proper auction format!');
-
+console.log(auctionObj);
     var auction = new Auction({
         owner: userId,
         itemName: auctionObj.itemName,
@@ -64,7 +63,7 @@ auctionSchema.statics.addNewItem = (auctionObj, userId, cb) => {
         exp: auctionObj.exp,
         bids: [{
             itemBidder: userId,
-            bidValue: auctionObj.initialValue,
+            bidValue: auctionObj.bidValue,
             bidDate: moment()
         }]
 });

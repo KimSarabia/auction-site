@@ -2,10 +2,14 @@
 
 var app = angular.module('myApp');
 
-app.factory('AuctionAuth', function($http) {
+app.factory('AuctionAuth', function($http, $cookies) {
 
     function getUsers() {
-        return $http.get('/users');
+        return $http.get('./api/users');
+    }
+
+    function getUser() {
+        return $http.get('./api/users/profile');
     }
 
     function getAuctions() {
@@ -28,47 +32,43 @@ app.factory('AuctionAuth', function($http) {
         return $http.put(`./api/auctions/${id}/updateItem/`, {"value": value});
     }
 
-    function logOut() {
-        return $http.delete('./api/users/logout');
-    }
-
     return {
         getUsers: getUsers,
         getAuctions: getAuctions,
         getUser: getUser,
-        register: register,
-        signin: signin,
-        updateUser: updateUser,
-        logOut: logOut
+        getAuction: getAuction,
+        addBid: addBid,
+        cancelBid: cancelBid,
+        updateItem: updateItem,
     }
 
 
 });
 
-app.factory('UserAuth', function($http) {
-
+app.factory('UserAuth', function($http, $cookies) {
+//
     function getUsers() {
-        return $http.get('/users');
+        return $http.get('./api/users');
     }
 
     function getAuctions() {
-        return $http.get('/auctions');
+        return $http.get('./api/auctions');
     }
 
     function getUser() {
-        return $http.get(`/users/profile`);
+        return $http.get('./api/users/profile');
     }
-
+//
     function register(user) {
-        return $http.post('/users/register', user);
+        return $http.post('./api/users/register', user);
     }
-
+//
     function signin(user) {
         return $http.post('./api/users/authenticate', user);
     }
-
+//
     function updateUser(user) {
-      return $http.put('./api/users/profile', editedUserObj);
+      return $http.put('./api/users/profile', user);
 
     }
 

@@ -6,7 +6,7 @@
 require('dotenv').config();
 
 var app = require('../app');
-var debug = require('debug')('auction-database:server');
+var debug = require('debug')('auction:server');
 var http = require('http');
 
 /**

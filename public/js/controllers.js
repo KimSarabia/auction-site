@@ -2,16 +2,17 @@
 
 var app = angular.module('myApp');
 
-app.controller('mainCtrl', function($scope, UserAuth, $state, $cookies){
-  console.log("main ctrl");
+app.controller('mainCtrl', function($scope, UserAuth, AuctionAuth, $state, $cookies){
+  console.log("mainCtrl!");
+
   $scope.logOut = function(){
-    console.log("logout trigger click");
+    console.log("logout!");
     document.cookie = '';
   }
 });
 
 app.controller('registerCtrl', function($scope, UserAuth, $state){
-  console.log("yay!");
+  console.log("registerCtrl!");
 
   function renderUserData(){
     UserAuth.getUsers()
@@ -37,28 +38,32 @@ app.controller('registerCtrl', function($scope, UserAuth, $state){
 });
 
 app.controller('signinCtrl', function($scope, UserAuth, $stateParams, $state){
-  console.log("signinCtrl");
+
+  console.log("signinCtrl!");
+
   $scope.signin = function(user){
     UserAuth.signin(user)
     .then(function(res){
       $state.go('profile');
-      console.log("signin res data", res.data);
+      console.log("SIGNIN DATA:", res.data);
     }, function(err){
-      console.log("signin err", err);
+      console.log("Error Signing In:", err);
     });
   };
 
 }); //end signinCtrl
 
 app.controller('profileCtrl', function($scope, UserAuth, $state){
+
   console.log("profileCtrl");
+
   function renderUserData(){
     UserAuth.getUser()
     .then(function(res){
       $scope.user = res.data;
-      console.log("profile res", res.data);
+      console.log("USER PROFILE DATA:", res.data);
     }, function(err){
-      console.error("err", err);
+      console.error("PROFILE ERROR:", err);
     });
   }
 
@@ -70,12 +75,12 @@ app.controller('profileCtrl', function($scope, UserAuth, $state){
   }; //end editProfile
 
   $scope.updateProfile = function(user){
-    console.log("user", user);
+    console.log("UPDATE USER:", user);
     UserAuth.updateUser(user)
     .then(function(res){
       renderUserData();
     }, function(err){
-      console.error("update error: ", err);
+      console.error("UPDATE ERROR: ", err);
     });
   }
 });//end profileCtrl
