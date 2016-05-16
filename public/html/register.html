@@ -1,0 +1,27 @@
+<div class="container">
+<form name='registrationForm'
+      ng-controller='registerCtrl'
+      novalidate ng-submit='register(regUser)'>
+  <h3>Register</h3>
+  <div>
+    <label>Username:</label>
+    <input type="text" ng-model='regUser.username' required>
+  </div>
+  <div>
+    <label>Password:</label>
+    <input type="password" ng-model='regUser.password' required>
+  </div>
+  <div>
+    <label>Image</label><input type="text" ng-model="regUser.image">
+  </div>
+  <div>
+    <label>Email</label>
+    <input type="text" ng-model="regUser.email">
+  </div>
+  <div>
+    <label>About: </label>
+    <input type="text" ng-model="regUser.about">
+  </div>
+  <button class="btn btn-primary">Register!</button>
+</form>
+</div>

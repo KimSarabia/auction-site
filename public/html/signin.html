@@ -1,0 +1,17 @@
+<div class="container">
+<form class="form" name='signinForm'
+        ng-controller='signinCtrl'
+        novalidate ng-submit='signin(signinUser)'>
+    <h3>Login</h3>
+    <div>
+      <label>Username:</label>
+      <input type="text" ng-model='signinUser.username'>
+    </div>
+    <div>
+      <label>Password:</label>
+      <input type="password" ng-model='signinUser.password'>
+    </div>
+    <button class="btn btn-primary">Login in</button>
+  </form>
+
+</div>

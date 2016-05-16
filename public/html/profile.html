@@ -1,0 +1,48 @@
+<div class="container">
+  <div class="row text-center details-row">
+    <div class="col-xs-12" class="card">
+
+      <div class="thumbnail details">
+      <img ng-src="{{user.image}}" alt="">
+      <div class="caption">
+        <h3>{{user.username}}</h3>
+        <p>{{user.email}}</p>
+        <p>{{user.notes}}</p>
+        <p>{{user.about}}</p>
+
+        <a ng-click="editProfile(user)" class="btn btn-primary" role="button" data-toggle="modal" data-target="#myModal">edit</a></p>
+
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
+
+
+<!--begin modal-->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title" data-dismiss="modal" id="myModalLabel">Edit Creature</h4>
+    </div>
+    <div class="modal-body">
+
+      <h3>Name</h3>
+      <input type="text" class="editInput" placeholder="name" name="editUsername" ng-model="user.username">
+      <h3>Email</h3>
+      <input type="text" class="editInput" placeholder="email" name="editUserEmail" ng-model="user.email">
+      <h3>Profile Photo</h3>
+      <input type="text" class="editInput" placeholder="image" name="editUserImage" ng-model="user.image">
+      <h3>About</h3>
+      <input type="text" class="editInput" placeholder="about" name="editUserAbout" ng-model="user.about">
+
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click='updateProfile(user)'>Save changes</button>
+    </div>
+  </div>
+</div>
+</div> <!--end modal-->
