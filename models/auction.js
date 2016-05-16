@@ -10,7 +10,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 var Auction;
 
-var Auction = require('../models/auction');
+var User = require('../models/user');
 
 var auctionSchema = new mongoose.Schema({
     owner: {
@@ -31,46 +31,52 @@ var auctionSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+
     exp: {
         type: Date,
         required: true
     },
-
-    highestBid: {
-        value: {
-            type: Number
-        },
-        user: {
+    bids: [{
+        itemBidder: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User'
+        },
+        bidValue: {
+            type: Number,
+            // required: true
+        },
+        bidDate: {
+            type: String,
+            // required: true
         }
-    }
+    }]
+
 });
 
 auctionSchema.statics.addNewItem = (auctionObj, userId, cb) => {
     if (!auctionObj) res.send('Not proper auction format!');
 
     var auction = new Auction({
+        owner: userId,
         itemName: auctionObj.itemName,
         imgUrl: auctionObj.imgUrl,
         initialBid: auctionObj.initialBid,
         exp: auctionObj.exp,
-        highestBid: {
-            value: auctionObj.finalPrice,
-            user: userId
-        }
-    });
+        bids: [{
+            itemBidder: userId,
+            bidValue: auctionObj.initialValue,
+            bidDate: moment()
+        }]
+});
     auction.save(cb);
 }
 
 auctionSchema.statics.updateItem = (userId, auctionId, updatedItem, cb) => {
     Auction.findById(auctionId, (err, prev) => {
         if (err) cb(err);
-        if (prev.bids[0].madeBy.toString() !== userId.toString()) {
-            return cb({
-                err: 'You are not authorized to make any changes.'
-            });
-        }
+
+        if(prev && prev.owner.toString() !== userId.toString()) return cb({err: 'Unauthorized! You are not the owner of this item.'})
+
 
         var auction = {
             itemName: updatedItem.itemName,
@@ -79,38 +85,30 @@ auctionSchema.statics.updateItem = (userId, auctionId, updatedItem, cb) => {
         };
 
         var currentlyUpdating = {};
-
         for (var key in auction) {
-            if (auction[key] !== undefined && auction[key] !== null) {
-                currentlyUpdating[key] = auction[key];
-            }
+            if (auction[key] !== undefined && auction[key] !== null) currentlyUpdating[key] = auction[key];
         }
-
         Auction.findByIdAndUpdate(auctionId, {
             $set: currentlyUpdating
         }, {
             new: true
         }, cb);
-    });
-};
+    })
+}
 
-auctionSchema.methods.newBid = function(userId, value, cb) {
-    if (this.bids[this.bids.length - 1].value >= value) {
-        return cb({
-            err: 'Your bid must be higher than the current value.'
-        });
-    }
+auctionSchema.methods.addBid = function (userId, bidValue, cb) {
+  if(this.bids[this.bids.length - 1].bidValue >= bidValue) return cb({err: 'Your bid must be higher then the highest bid!'});
+  var bid = {
+    "itemBidder": userId,
+    "bidValue": bidValue,
+    "bidDate": moment()
+  }
+  console.log(bid);
+  this.bids.push(bid);
+  this.save(cb);
+}
 
-    var bid = {
-        "bidFrom": userId,
-        "value": value
-    };
-
-    console.log(bid);
-    this.bids.push(bid);
-    this.save(cb);
-};
-
+//TODO: FIX THIS
 auctionSchema.methods.cancelBid = function(bidId, userId, cb) {
     var initialBid_id = this.bids[0]._id.toString();
     if (initialBid_id === bidId.toString()) {
@@ -120,7 +118,7 @@ auctionSchema.methods.cancelBid = function(bidId, userId, cb) {
     }
     var bidderId = this.bids.filter((bid) => {
         return bid._id.toString() === bidId.toString();
-    })[0].bidFrom;
+    })[0].itemBidder;
 
     if (bidderId.toString() !== userId.toString()) {
         return cb({

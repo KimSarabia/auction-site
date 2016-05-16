@@ -2,46 +2,89 @@
 
 var app = angular.module('myApp');
 
-app.factory('UserAuth', function($http, $cookies){
+app.factory('AuctionAuth', function($http) {
 
-function getUsers(){
-  return $http.get('/users');
-}
+    function getUsers() {
+        return $http.get('/users');
+    }
 
-function getMessages(){
-  return $http.get('/messages');
-}
+    function getAuctions() {
+        return $http.get('./api/auctions');
+    }
 
-function getUser(){
-  return $http.get(`/users/profile`);
-}
+    function getAuction() {
+        return $http.get(`./api/auctions/${id}`);
+    }
 
-function register(user){
-  return $http.post('/users/register', user);
-}
+    function addBid(auction) {
+      return $http.post(`./api/auctions/${id}/addBid/`, {"bidValue": bidValue});
+    }
 
-function signin(user){
-  return $http.post('/users/authenticate', user);
-}
+    function cancelBid(auction) {
+        return $http.delete('./api/auctions/:id/cancelBid/', auction);
+    }
 
-function updateUser(user){
-  var id = user._id;
-  return $http.put(`/users/${id}`, user);
-}
+    function updateItem(auction) {
+        return $http.put(`./api/auctions/${id}/updateItem/`, {"value": value});
+    }
 
-function logOut(){
-  return $cookies.remove('appNameCookie')
-}
+    function logOut() {
+        return $http.delete('./api/users/logout');
+    }
 
-return {
-  getUsers:getUsers,
-  getMessages:getMessages,
-  getUser:getUser,
-  register:register,
-  signin:signin,
-  updateUser:updateUser,
-  logOut:logOut
-}
+    return {
+        getUsers: getUsers,
+        getAuctions: getAuctions,
+        getUser: getUser,
+        register: register,
+        signin: signin,
+        updateUser: updateUser,
+        logOut: logOut
+    }
+
+
+});
+
+app.factory('UserAuth', function($http) {
+
+    function getUsers() {
+        return $http.get('/users');
+    }
+
+    function getAuctions() {
+        return $http.get('/auctions');
+    }
+
+    function getUser() {
+        return $http.get(`/users/profile`);
+    }
+
+    function register(user) {
+        return $http.post('/users/register', user);
+    }
+
+    function signin(user) {
+        return $http.post('./api/users/authenticate', user);
+    }
+
+    function updateUser(user) {
+      return $http.put('./api/users/profile', editedUserObj);
+
+    }
+
+    function logOut() {
+      return $http.delete('./api/users/logout');
+    }
+
+    return {
+        getUsers: getUsers,
+        getAuctions: getAuctions,
+        getUser: getUser,
+        register: register,
+        signin: signin,
+        updateUser: updateUser,
+        logOut: logOut
+    }
 
 
 });
